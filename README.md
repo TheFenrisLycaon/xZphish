@@ -1,4 +1,4 @@
-<!-- Zphisher -->
+<!-- xZphish -->
 
 <p align="center">
   <img src=".imgs/logo.png">
@@ -32,7 +32,7 @@ $ cd xZphish
 $ bash xZphish.sh
 ```
 
-- On first launch, It'll install the dependencies and that's it. `xZphisher` is installed.
+- On first launch, It'll install the dependencies and that's it. `xZphish` is installed.
 
 ### Run on Docker
 ```
