@@ -2,11 +2,11 @@
 
 ##   xZphisher 	: 	Automated Phishing Tool
 ##   Author 	: 	Rishabh Anand
-##   Version 	: 	MArk-1
+##   Version 	: 	Mark-1
 ##   Github 	: 	https://github.com/TheFenrisLycaon
 
 ##   THANKS TO :
-##   TAHMID RAYAT 	- https://github.com/htr-tech
+##   Tahmid Rayat 	- https://github.com/htr-tech
 ##   Aditya Shakya - https://github.com/adi1090x
 ##   Moises Tapia - https://github.com/MoisesTapia
 ##   TheLinuxChoice - https://twitter.com/linux_choice
