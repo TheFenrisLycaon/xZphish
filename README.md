@@ -36,8 +36,8 @@ $ bash xZphish.sh
 
 ### Run on Docker
 ```
-$ docker pull htrtech/zphisher
-$ docker run --rm -it htrtech/zphisher
+$ docker pull TheFenrisLycaon/xZphish
+$ docker run --rm -it TheFenrisLycaon/xZphish
 ```
 
 ### Dependencies
