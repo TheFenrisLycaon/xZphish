@@ -42,7 +42,7 @@ $ docker run --rm -it htrtech/zphisher
 
 ### Dependencies
 
-**`Zphisher`** requires following programs to run properly - 
+**`xZphish`** requires following programs to run properly - 
 - `php`
 - `wget`
 - `curl`
