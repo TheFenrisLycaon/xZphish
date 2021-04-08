@@ -4,3 +4,4 @@
 .gitignore
 usernames.dat
 ip.txt
+*.ngrok2/*
