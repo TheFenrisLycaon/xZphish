@@ -5,3 +5,4 @@
 usernames.dat
 ip.txt
 *.ngrok2/*
+*/*.yml
