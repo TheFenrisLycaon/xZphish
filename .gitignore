@@ -1,8 +1,0 @@
-*.dat
-*.txt
-.server/*
-.gitignore
-usernames.dat
-ip.txt
-*.ngrok2/*
-*/*.yml
